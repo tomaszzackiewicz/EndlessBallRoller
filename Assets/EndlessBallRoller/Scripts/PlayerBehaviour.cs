@@ -10,47 +10,46 @@ namespace EndlessBallRoller {
     public class PlayerBehaviour : MonoBehaviour {
 
         public static event Action<float, bool> RestartGameEvent;
-        private Rigidbody rb;
 
-        //[HideInInspector]
         public float dodgeSpeed = 5;
-        private float rollSpeed = 10;
+        public float waitTime = 2.0f;
         public int health = 100;
         public GameObject protectedImage;
-        public enum MobileHorizMovement {
-            Accelerometer,
-            ScreenTouch
-        }
         public Text speedText;
         public Text healthText;
-
         public Text infoText;
         public Text endInfoText;
         public MobileHorizMovement horizMovement = MobileHorizMovement.Accelerometer;
         public float swipeMove = 2f;
         public float minSwipeDistance = 2f;
-        private Vector2 touchStart;
-        bool isStuck = false;
-        private bool isProtected = false;
         public AudioClip changeBall;
-        AudioSource audioSource;
-        Image image;
-        private float thrust = 0.5f;
-        public float waitTime = 2.0f;
+        public Text scoreText;
 
-        bool isDefaultChanged = true;
-        bool isGlassChanged = true;
-        bool isRubberChanged = true;
-        bool isWoodenChanged = true;
-        bool isPlasticChanged = true;
-        bool isConcreteChanged = true;
-        bool isAluminiumChanged = true;
-        bool isCopperChanged = true;
-        bool isIronChanged = true;
-        bool isTitanChanged = true;
-        bool isSilverChanged = true;
-        bool isGoldenChanged = true;
-        bool isDiamondChanged = true;
+        public enum MobileHorizMovement { Accelerometer, ScreenTouch }
+
+        private Vector2 touchStart;
+        private bool isStuck = false;
+        private bool isProtected = false;
+        private AudioSource audioSource;
+        private Image image;
+        private float rollSpeed = 10;
+        private Rigidbody rb;
+        private float thrust = 0.5f;
+        private int score = 0;
+
+        private bool isDefaultChanged = true;
+        private bool isGlassChanged = true;
+        private bool isRubberChanged = true;
+        private bool isWoodenChanged = true;
+        private bool isPlasticChanged = true;
+        private bool isConcreteChanged = true;
+        private bool isAluminiumChanged = true;
+        private bool isCopperChanged = true;
+        private bool isIronChanged = true;
+        private bool isTitanChanged = true;
+        private bool isSilverChanged = true;
+        private bool isGoldenChanged = true;
+        private bool isDiamondChanged = true;
 
         private Material glass;
         private Material wooden;
@@ -80,6 +79,18 @@ namespace EndlessBallRoller {
 
         private string ballType;
         private int playerVelocity;
+        private Renderer ren;
+
+        public int Score {
+            get { return score; }
+            set {
+                score = value;
+
+                // Update the text to display the whole number portion  
+                // of the score 
+                scoreText.text = string.Format("{0:0}", score);
+            }
+        }
 
         public string BallType {
             get {
@@ -92,8 +103,11 @@ namespace EndlessBallRoller {
             }
         }
 
+        void Awake() {
+            ren = gameObject.GetComponent<Renderer>();
+        }
+
         void Start() {
-            // Get access to our Rigidbody component 
             rb = GetComponent<Rigidbody>();
 
             Score = 0;
@@ -140,9 +154,6 @@ namespace EndlessBallRoller {
                 return;
             }
             healthText.text = health.ToString();
-            //Score += Time.deltaTime;
-
-            // Movement in the x axis 
             float horizontalSpeed = 0;
 
             if (Input.GetKey(KeyCode.DownArrow)) {
@@ -158,24 +169,6 @@ namespace EndlessBallRoller {
                 rollSpeed = 10.0f;
             }
 
-
-            /*if(Input.GetKeyDown(KeyCode.UpArrow)){
-                if(isGrounded){
-                    //
-
-                }
-                 if((int)rollSpeed < 10){
-                    rollSpeed += Time.deltaTime * 10;
-                    speedText.text = ((int)rollSpeed).ToString();
-                }
-            }else if(Input.GetKey(KeyCode.DownArrow)){
-                if((int)rollSpeed > 0){
-                    rollSpeed -= Time.deltaTime * 10;
-                    speedText.text = ((int)rollSpeed).ToString();
-                }
-            }else{
-                //rollSpeed = 5.0f;
-            } */
             playerVelocity = (int)rb.velocity.z;
             speedText.text = (playerVelocity).ToString();
 
@@ -216,13 +209,6 @@ namespace EndlessBallRoller {
 #endif
 
             var movementForce = new Vector3(horizontalSpeed, 0, rollSpeed);
-
-            // Time.deltaTime is the amount of time since the  
-            // last frame (approx. 1/60 seconds) 
-            //movementForce *= (Time.deltaTime * 60);
-
-            // Apply our auto-moving and movement forces 
-            //rb.AddForce(movementForce);
             rb.velocity = movementForce;
         }
 
@@ -277,12 +263,6 @@ namespace EndlessBallRoller {
             }
         }
 
-        /// <summary> 
-        /// Will figure out where to move the player horizontally 
-        /// </summary> 
-        /// <param name="pixelPos">The position the player has  
-        ///                         touched/clicked on</param> 
-        /// <returns>The direction to move in the x axis</returns> 
         float CalculateMovement(Vector3 pixelPos) {
             // Converts to a 0 to 1 scale 
             var worldPos = Camera.main.ScreenToViewportPoint(pixelPos);
@@ -300,13 +280,7 @@ namespace EndlessBallRoller {
             // replace horizontalSpeed with our own value 
             return xMove * dodgeSpeed;
         }
-
-
-        /// <summary> 
-        /// Will determine if we are touching a game object and if so  
-        /// call events for it 
-        /// </summary> 
-        /// <param name="touch">Our touch event</param> 
+       
         private static void TouchObjects(Touch touch) {
             // Convert the position into a ray 
             Ray touchRay = Camera.main.ScreenPointToRay(touch.position);
@@ -318,21 +292,6 @@ namespace EndlessBallRoller {
                 // Call the PlayerTouch function if it exists on a  
                 // component attached to this object 
                 hit.transform.SendMessage("PlayerTouch", SendMessageOptions.DontRequireReceiver);
-            }
-        }
-
-        private int score = 0;
-
-        public Text scoreText;
-
-        public int Score {
-            get { return score; }
-            set {
-                score = value;
-
-                // Update the text to display the whole number portion  
-                // of the score 
-                scoreText.text = string.Format("{0:0}", score);
             }
         }
 
@@ -354,10 +313,6 @@ namespace EndlessBallRoller {
             protectedImage.SetActive(true);
             yield return new WaitForSeconds(protectedTime);
             yield return StartCoroutine(BlinkCor());
-            //yield return new WaitForSeconds(2.0f);
-            //StopCoroutine(coroutine);
-            //StopAllCoroutines();
-            //yield return new WaitForSeconds(1.0f);
             protectedImage.SetActive(false);
             isProtected = false;
         }
@@ -388,11 +343,6 @@ namespace EndlessBallRoller {
             healthText.text = noHealth.ToString();
 
             if (health <= 0) {
-
-                //Analytics.CustomEvent("Game Over", eventData);
-
-                // Call the function ResetGame after waitTime has passed 
-                //Invoke("ResetGame", waitTime);
                 RestartGameEvent(waitTime, true);
                 gameObject.SetActive(false);
             }
@@ -409,7 +359,6 @@ namespace EndlessBallRoller {
 
             if (Score > glassLevel && Score < woodenLevel) {//Glass
                 if (isDefaultChanged) {
-                    Renderer ren = gameObject.GetComponent<Renderer>();
                     ren.material = iron;
                     infoText.text = ballType = "Glass Ball";
                     endInfoText.text = "Really bad!";
@@ -418,7 +367,6 @@ namespace EndlessBallRoller {
                 }
             } else if (Score > woodenLevel && Score < rubberLevel) {//Wooden
                 if (isGlassChanged) {
-                    Renderer ren = gameObject.GetComponent<Renderer>();
                     ren.material = wooden;
                     infoText.text = ballType = "Wooden Ball";
                     endInfoText.text = "Still bad!";
@@ -427,7 +375,6 @@ namespace EndlessBallRoller {
                 }
             } else if (Score > rubberLevel && Score < plasticLevel) {//Rubber
                 if (isRubberChanged) {
-                    Renderer ren = gameObject.GetComponent<Renderer>();
                     ren.material = rubber;
                     infoText.text = ballType = "Rubber Ball";
                     endInfoText.text = "Oh, still not good!";
@@ -436,7 +383,6 @@ namespace EndlessBallRoller {
                 }
             } else if (Score > plasticLevel && Score < concreteLevel) {//Plastic
                 if (isPlasticChanged) {
-                    Renderer ren = gameObject.GetComponent<Renderer>();
                     ren.material = plastic;
                     infoText.text = ballType = "Plastic Ball";
                     endInfoText.text = "On the right way!";
@@ -445,7 +391,6 @@ namespace EndlessBallRoller {
                 }
             } else if (Score > concreteLevel && Score < aluminiumLevel) {//Concrete
                 if (isConcreteChanged) {
-                    Renderer ren = gameObject.GetComponent<Renderer>();
                     ren.material = concrete;
                     infoText.text = ballType = "Concrete Ball";
                     endInfoText.text = "That's it!";
@@ -454,7 +399,6 @@ namespace EndlessBallRoller {
                 }
             } else if (Score > aluminiumLevel && Score < ironLevel) {//Aluminium
                 if (isAluminiumChanged) {
-                    Renderer ren = gameObject.GetComponent<Renderer>();
                     ren.material = aluminium;
                     infoText.text = ballType = "Aluminium Ball";
                     endInfoText.text = "You are almost good!";
@@ -463,7 +407,6 @@ namespace EndlessBallRoller {
                 }
             } else if (Score > ironLevel && Score < copperLevel) {//Iron
                 if (isIronChanged) {
-                    Renderer ren = gameObject.GetComponent<Renderer>();
                     ren.material = iron;
                     infoText.text = ballType = "Iron Ball";
                     endInfoText.text = "You are quite good!";
@@ -472,7 +415,6 @@ namespace EndlessBallRoller {
                 }
             } else if (Score > copperLevel && Score < titanLevel) {//Copper
                 if (isCopperChanged) {
-                    Renderer ren = gameObject.GetComponent<Renderer>();
                     ren.material = copper;
                     infoText.text = ballType = "Copper Ball";
                     endInfoText.text = "You are good!";
@@ -481,7 +423,6 @@ namespace EndlessBallRoller {
                 }
             } else if (Score > titanLevel && Score < silverLevel) {//Titan
                 if (isTitanChanged) {
-                    Renderer ren = gameObject.GetComponent<Renderer>();
                     ren.material = titan;
                     infoText.text = ballType = "Titan Ball";
                     endInfoText.text = "You are really good!";
@@ -490,7 +431,6 @@ namespace EndlessBallRoller {
                 }
             } else if (Score > silverLevel && Score < goldenLevel) {//Silver
                 if (isSilverChanged) {
-                    Renderer ren = gameObject.GetComponent<Renderer>();
                     ren.material = silver;
                     infoText.text = ballType = "Silver Ball";
                     endInfoText.text = "You almost the best!";
@@ -500,7 +440,6 @@ namespace EndlessBallRoller {
             } else if (Score > goldenLevel && Score < diamondLevel) {//Golden
                 if (isGoldenChanged) {
                     ChangeBallSound();
-                    Renderer ren = gameObject.GetComponent<Renderer>();
                     ren.material = golden;
                     infoText.text = ballType = "Golden Ball";
                     endInfoText.text = "You are the best!";
@@ -509,7 +448,6 @@ namespace EndlessBallRoller {
             } else if (Score > diamondLevel) {//Diamond
                 if (isDiamondChanged) {
                     ChangeBallSound();
-                    Renderer ren = gameObject.GetComponent<Renderer>();
                     ren.material = platinum;
                     infoText.text = ballType = "Platinum Ball";
                     endInfoText.text = "You are the winner!!!";

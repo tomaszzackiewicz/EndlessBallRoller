@@ -6,9 +6,10 @@ namespace EndlessBallRoller {
 
     public class SaveGameHistory : MonoBehaviour {
 
-        private string gameHistoryFolder = "GameHistory";
         public static SaveGameHistory instance;
         public bool isPersistant = true;
+
+        private string gameHistoryFolder = "GameHistory";
 
         public virtual void Awake() {
             if (!instance) {

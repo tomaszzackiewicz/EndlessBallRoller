@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using TMPro;
@@ -14,9 +12,10 @@ namespace EndlessBallRoller {
         public GameObject itemPrefab;
         public GameObject itemParent;
         public GameObject gameHistoryPanel;
-        private string gameHistoryFolder = "GameHistory";
         public static GameHistory instance;
         public bool isPersistant = true;
+
+        private string gameHistoryFolder = "GameHistory";
 
         public virtual void Awake() {
             if (!instance) {
@@ -28,12 +27,6 @@ namespace EndlessBallRoller {
 
         void Start() {
             gameHistoryPanel.SetActive(false);
-        }
-
-        void Update() {
-            if (Input.GetKeyDown(KeyCode.L)) {
-
-            }
         }
 
         public void LoadFile() {
@@ -56,11 +49,6 @@ namespace EndlessBallRoller {
             ClearItems();
             gameSessions = (List<GameSessions>)bf.Deserialize(file);
             file.Close();
-
-            //score = data.score;
-            //ball = data.ball;
-            //time = data.time;
-            //StartCoroutine(FillCor());
         }
 
         public void FillItems() {
@@ -93,7 +81,6 @@ namespace EndlessBallRoller {
         public void CancelHistoryButton() {
             gameHistoryPanel.SetActive(false);
         }
-
 
     }
 

@@ -1,10 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
-using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using Random = UnityEngine.Random;
@@ -13,8 +10,6 @@ namespace EndlessBallRoller {
 
     public class AdTimer : MonoBehaviour {
 
-        private float timer;
-        private bool timeStarted = false;
         public GameObject addPanel;
         public GameObject removeAdDialog;
         public TextMeshProUGUI timeText;
@@ -22,20 +17,22 @@ namespace EndlessBallRoller {
         public TextMeshProUGUI removeAdMessageText;
         public GameObject skipButton;
         public GameObject removeAddButton;
-        private bool isBigAdDisabled = false;
-        private bool isBigAdRemoved = false;
-        List<string> words = new List<string>();
-        int indexOfWords;
-        string word;
+        public List<string> characters;
         public int pass;
         public string password;
 
+        private bool isBigAdDisabled = false;
+        private bool isBigAdRemoved = false;
+        private List<string> words = new List<string>();
+        private int indexOfWords;
+        private string word;
+        private float timer;
+        private bool timeStarted = false;
         private string timePassed;
-        int minutes;
-        int seconds;
+        private int minutes;
+        private int seconds;
         private string doNotRemoveFolder = "DoNotRemove";
-        string[] array = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
-        public List<string> characters;
+        private string[] array = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
 
         public string TimePassed {
             get {

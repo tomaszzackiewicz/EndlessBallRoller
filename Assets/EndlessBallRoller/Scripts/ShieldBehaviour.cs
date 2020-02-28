@@ -6,11 +6,12 @@ namespace EndlessBallRoller {
 
     public class ShieldBehaviour : MonoBehaviour {
 
-        private GameObject player;
         public AnimationCurve myCurve;
         public GameObject fx;
         public AudioClip impact;
-        AudioSource audioSource;
+
+        private AudioSource audioSource;
+        private GameObject player;
 
         void Start() {
             audioSource = GetComponent<AudioSource>();

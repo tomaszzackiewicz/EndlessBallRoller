@@ -1,16 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace EndlessBallRoller {
 
     public class CoinBehaviour : MonoBehaviour {
 
-        private GameObject player;
         public AnimationCurve myCurve;
         public GameObject fx;
         public AudioClip impact;
-        AudioSource audioSource;
+
+        private GameObject player;
+        private AudioSource audioSource;
 
         void Start() {
             audioSource = GetComponent<AudioSource>();

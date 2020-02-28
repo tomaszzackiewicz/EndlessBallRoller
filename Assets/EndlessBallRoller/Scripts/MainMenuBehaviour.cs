@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Collections.Generic;
-//using Facebook.Unity; // FB
 using UnityEngine.UI;
 
 namespace EndlessBallRoller {

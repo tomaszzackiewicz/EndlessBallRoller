@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 using TMPro;
 using System.IO;
 
@@ -11,7 +8,8 @@ namespace EndlessBallRoller {
 
         public TMP_InputField wordIF;
         public TMP_InputField passIF;
-        string passwordFolder = "PasswordFolder";
+
+        private string passwordFolder = "PasswordFolder";
 
         public void GeneratePaswordButton() {
             int pass = 0;

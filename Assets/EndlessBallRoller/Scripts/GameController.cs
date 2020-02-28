@@ -4,7 +4,6 @@ using UnityEngine.UI;
 using System.Collections;
 using System;
 using Random=UnityEngine.Random;
-using UnityEngine.SceneManagement;
 
 namespace EndlessBallRoller {
 

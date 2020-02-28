@@ -13,7 +13,6 @@ namespace EndlessBallRoller {
         public static bool showAds = true;
         public static DateTime? nextRewardTime = null;
 
-
         public static void ShowAd() {
 
 #if UNITY_ADS

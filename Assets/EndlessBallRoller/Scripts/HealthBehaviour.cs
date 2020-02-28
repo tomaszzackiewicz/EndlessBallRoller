@@ -6,18 +6,17 @@ namespace EndlessBallRoller {
 
     public class HealthBehaviour : MonoBehaviour {
 
-        private GameObject player;
         public AnimationCurve myCurve;
         public GameObject fx;
         public AudioClip impact;
-        AudioSource audioSource;
 
-        // Use this for initialization
+        private GameObject player;
+        private AudioSource audioSource;
+
         void Start() {
             audioSource = GetComponent<AudioSource>();
         }
 
-        // Update is called once per frame
         void Update() {
             transform.position = new Vector3(transform.position.x, myCurve.Evaluate((Time.time % myCurve.length)), transform.position.z);
             transform.Rotate(20 * Time.deltaTime, 20 * Time.deltaTime, 20 * Time.deltaTime);
@@ -37,9 +36,6 @@ namespace EndlessBallRoller {
 
                 player = col.gameObject;
 
-                /* var eventData = new Dictionary<string, object>{
-                    { "score", playerBehaviour.Score += 1 }
-                }; */
                 playerBehaviour.UpdateHealth();
                 audioSource.PlayOneShot(impact, 1.0f);
                 GameObject.Destroy(gameObject, 0.1f);

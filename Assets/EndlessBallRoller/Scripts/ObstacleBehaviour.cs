@@ -12,6 +12,7 @@ namespace EndlessBallRoller {
         public GameObject fx;
         public int damage = 10;
         public AudioClip impact;
+
         private AudioSource audioSource;
         private bool isDamage;
         private GameObject player;

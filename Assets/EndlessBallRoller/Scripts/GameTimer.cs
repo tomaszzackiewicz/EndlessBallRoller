@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace EndlessBallRoller {
@@ -13,8 +11,8 @@ namespace EndlessBallRoller {
         public GameObject bigAd;
 
         private string timePassed;
-        int minutes = 0;
-        int seconds = 0;
+        private int minutes = 0;
+        private int seconds = 0;
 
         public string TimePassed {
             get {
@@ -34,11 +32,6 @@ namespace EndlessBallRoller {
                 seconds = Mathf.FloorToInt(timer - minutes * 60);
                 timePassed = string.Format("{0:00}:{1:00}", minutes, seconds);
                 timeText.text = timePassed;
-                /* if(seconds % 60 == 0){
-                    bigAd.SetActive(true);
-                    AdTimer adTimer = bigAd.transform.parent.GetComponentInChildren<AdTimer>();
-                    adTimer.Initialize();
-                } */
             }
         }
     }
